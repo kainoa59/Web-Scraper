@@ -1,7 +1,17 @@
 $.getJSON("/articles", function (data) {
     for (var i = 0; i < data.length; i++) {
-        $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+        $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>").append("<button class='delete-btn' id=" + data[i]._id +"> Delete </button>");
     }
+});
+
+$(".delete-btn").click(function (event) {
+    event.preventDefault();
+    const id = $(this).attr("id");
+    $.ajax(`/remove/${id}`, {
+        type: "PUT"
+    }).then(function(){
+        location.reload();
+    })
 });
 
 $(document).on("click", "p", function () {

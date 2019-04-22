@@ -68,6 +68,20 @@ app.post("/articles/:id", (req, res) => {
     });
 });
 
+app.delete("/note/:id", function (req, res) {
+    db.Note.findByIdAndRemove({ _id: req.params.id })
+        .then(function (dbNote) {
+
+            return db.Article.findOneAndUpdate({ note: req.params.id }, { $pullAll: [{ note: req.params.id }]});
+        })
+        .then(function (dbArticle) {
+            res.json(dbArticle);
+        })
+        .catch(function (err) {
+            res.json(err);
+        });
+});
+
 app.listen(PORT, () => {
     console.log(`App running on port ${PORT}`)
 });
